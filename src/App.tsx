@@ -3,6 +3,7 @@ import './App.css'
 import UserManagment from './components/UserManagment'
 import Dashboard from './components/Dashboard'
 import CreateVisitor from './components/CreateVisitor'
+import AllVisitor from './components/AllVisitor'
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
           <Route path='/create-visitor' element={<CreateVisitor />} />
           <Route path='/' element={<Dashboard />} />
           <Route path='/user-managment' element={<UserManagment />} />
+          <Route path='/visitors' element={<AllVisitor />} />
           <Route path='*' element={<h1>Page Not Found</h1>} />
         </Routes>
       </BrowserRouter>
