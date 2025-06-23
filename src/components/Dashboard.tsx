@@ -18,7 +18,8 @@ interface Visitor {
     checkOut?: string
     status: "Pending" | "Approved" | "Rejected"
     visitDate: string,
-    createdAt: any
+    createdAt: any,
+    showModal: any
 }
 
 
@@ -134,7 +135,7 @@ const VisitorDashboard = () => {
                                 <button
                                     className=" btn bg-gradient-to-r from-blue-600 to-purple-600 text-white "
                                     onClick={() => {
-                                        (document.getElementById('my_modal_3') as HTMLInputElement)?.showModal()
+                                        (document.getElementById('my_modal_3') as HTMLInputElement).showModal()
                                     }}
                                 >
                                     <UserPlus className="w-4 h-4" /> Add Visitor
@@ -259,7 +260,6 @@ const VisitorDashboard = () => {
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Visitor
                                         </th>
-
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Purpose
                                         </th>

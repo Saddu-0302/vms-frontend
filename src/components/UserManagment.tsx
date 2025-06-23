@@ -77,6 +77,8 @@ const UserManagement = () => {
         },
     ]
 
+
+
     const getRoleBadgeColor = (role: string) => {
         switch (role) {
             case "admin":
@@ -288,7 +290,8 @@ const UserManagement = () => {
                                     </div>
 
                                     <div className="space-y-2 mb-4">
-                                        <div className="flex items-center text-sm text-gray-600">
+                                        <div
+                                            className="flex items-center text-sm text-gray-600">
                                             <span className="font-medium w-20 text-gray-500">Email:</span>
                                             <span className="text-gray-900">{user.email}</span>
                                         </div>

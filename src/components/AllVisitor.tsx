@@ -2,19 +2,6 @@ import { UserCheck, UserX } from "lucide-react"
 import { useGetAllVisitorsQuery } from "../redux/visitorApi"
 import MenuList from "./MenuList"
 
-interface Visitor {
-    _id: string
-    name: string
-    email: string
-    contact: string
-    purpose: string
-    host: string
-    checkIn: string
-    checkOut?: string
-    status: "Pending" | "Approved" | "Rejected"
-    visitDate: string,
-    createdAt: any
-}
 const AllVisitor = () => {
     const { data } = useGetAllVisitorsQuery(undefined)
 
