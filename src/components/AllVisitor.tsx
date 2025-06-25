@@ -1,10 +1,42 @@
-import { UserCheck, UserX } from "lucide-react"
+import { FilterIcon, UserCheck, UserX } from "lucide-react"
 import { useGetAllVisitorsQuery } from "../redux/visitorApi"
 import MenuList from "./MenuList"
-
+import { useEffect, useState } from "react"
+interface Visitor {
+    _id: string
+    name: string
+    email: string
+    contact: string
+    purpose: string
+    host: string
+    checkIn: string
+    checkOut?: string
+    status: "Pending" | "Approved" | "Rejected"
+    visitDate: string,
+    createdAt: any,
+    showModal: any
+}
 const AllVisitor = () => {
-    const { data } = useGetAllVisitorsQuery(undefined)
 
+    const [search, setSearch] = useState<string>()
+    const [filterStatus, setFilterStatus] = useState<string>()
+    const [filteredData, setFilteredData] = useState<Visitor[]>()
+    const { data } = useGetAllVisitorsQuery(undefined)
+    console.log(filteredData);
+
+    useEffect(() => {
+        const searchInput = search?.toLowerCase().trim()
+        let filteredVisitor: Visitor[] = data
+        if (searchInput) {
+            filteredVisitor = data?.filter((v: any) =>
+                v.name.toLowerCase().includes(searchInput)
+            )
+        }
+        if (filterStatus) {
+            filteredVisitor = data.filter((v: any) => v.status === filterStatus)
+        }
+        setFilteredData(filteredVisitor)
+    }, [search, data, filterStatus])
     const statusBadge = (status: string) => {
         switch (status) {
             case "Pending":
@@ -32,16 +64,20 @@ const AllVisitor = () => {
                             <h1 className="text-2xl font-bold text-gray-900">Visitor Dashboard</h1>
                         </div>
                         <div className="flex items-center gap-3">
-
                             <div className="flex justify-end  ">
-                                <button
-                                    className=" btn bg-gradient-to-r from-blue-600 to-purple-600 text-white "
-                                // onClick={() => {
-                                //     (document.getElementById('my_modal_3') as HTMLInputElement)?.showModal()
-                                // }}
-                                >
-                                    {/* <UserPlus className="w-4 h-4" /> Add Visitor */}
-                                </button>
+                                <input value={search || ""} onChange={(e) => setSearch(e.target.value)} className="input hidden lg:block" placeholder="Search" type="text" />
+                                <div className="dropdown dropdown-end">
+                                    <div tabIndex={0} role="button" className="btn bg-gradient-to-r from-blue-600 to-purple-600 text-white ">
+                                        <FilterIcon className="w-4 h-4" />
+                                    </div>
+                                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                        <li><a onClick={() => setFilterStatus("")}>All Visitor</a></li>
+                                        <li><a onClick={() => setFilterStatus("Pending")}>Pending</a></li>
+                                        <li><a onClick={() => setFilterStatus("Approved")}>Approved</a></li>
+                                        <li><a onClick={() => setFilterStatus("Rejected")}>Rejected</a></li>
+                                        <li><input value={search || ""} onChange={(e) => setSearch(e.target.value)} className="input" placeholder="Search" type="text" /></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -49,7 +85,7 @@ const AllVisitor = () => {
             </div>
 
             {
-                data && <div className="hidden lg:block md:block overflow-x-auto">
+                filteredData && <div className="hidden lg:block md:block overflow-x-auto">
                     <table className="w-full table">
                         <thead className="bg-gray-50 table-header-group">
                             <tr>
@@ -65,7 +101,7 @@ const AllVisitor = () => {
                         </thead>
                         <tbody>
                             {
-                                data.map((visitor: any) => <tr key={visitor._id}>
+                                filteredData?.map((visitor: any) => <tr key={visitor._id}>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500">{visitor._id.slice(-6)}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500">{visitor.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500">{visitor.email}</td>
@@ -102,7 +138,7 @@ const AllVisitor = () => {
 
             <div className="md:hidden divide-y divide-gray-300">
                 {
-                    data && data.map((v: any) => <div key={v._id} className="p-6">
+                    filteredData && filteredData.map((v: any) => <div key={v._id} className="p-6">
                         <div className="flex justify-between items-start">
                             <div>
                                 <h1 className="font-semibold text-gray-900 text-base">{v.name}</h1>
