@@ -112,7 +112,7 @@ const UserManagement = () => {
                             </div>
                             <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
                         </div>
-                        <button onClick={openModal} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200 cursor-pointer">
+                        <button onClick={openModal} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:bg-blue-700 text-white btn btn-sm cursor-pointer">
                             <UserPlus className="w-4 h-4" />
                             Add User
                         </button>
