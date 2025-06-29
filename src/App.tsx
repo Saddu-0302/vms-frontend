@@ -4,6 +4,7 @@ import UserManagment from './components/UserManagment'
 import Dashboard from './components/Dashboard'
 import CreateVisitor from './components/CreateVisitor'
 import AllVisitor from './components/AllVisitor'
+import PendingVisitor from './components/PendingVisitor'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
           <Route path='/' element={<Dashboard />} />
           <Route path='/user-managment' element={<UserManagment />} />
           <Route path='/visitors' element={<AllVisitor />} />
+          <Route path='/pending' element={<PendingVisitor />} />
           <Route path='*' element={<h1>Page Not Found</h1>} />
         </Routes>
       </BrowserRouter>
