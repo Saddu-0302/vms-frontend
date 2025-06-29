@@ -67,7 +67,7 @@ const AllVisitor = () => {
                             <div className="flex justify-end  ">
                                 <input value={search || ""} onChange={(e) => setSearch(e.target.value)} className="input hidden lg:block" placeholder="Search" type="text" />
                                 <div className="dropdown dropdown-end">
-                                    <div tabIndex={0} role="button" className="btn bg-gradient-to-r from-blue-600 to-purple-600 text-white ">
+                                    <div tabIndex={0} role="button" className="btn border-2 border-gray-300 ">
                                         <FilterIcon className="w-4 h-4" />
                                     </div>
                                     <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
