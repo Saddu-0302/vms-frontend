@@ -3,6 +3,7 @@ import * as yup from "yup"
 import { useEffect } from "react"
 import { User, Mail, Phone, Shield, Lock, UserPlus, Loader2 } from "lucide-react"
 import { useAddUserMutation } from "../redux/userApi"
+import { toast } from "react-toastify"
 
 
 const CreateUser = () => {
@@ -33,10 +34,10 @@ const CreateUser = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            alert("User Created Successfully")
+            toast.success("User Created Successfully")
         }
         if (isError) {
-            alert(`Something Went Wrong`)
+            toast.error(`Something Went Wrong`)
         }
     }, [isSuccess, isError])
 
