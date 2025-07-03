@@ -34,11 +34,11 @@ const Login = () => {
         }
     }, [isSuccess, isError])
     return <>
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="min-h-screen ">
             {/* Background Pattern */}
             <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
 
-            <div className="relative flex  justify-center min-h-screen p-4">
+            <div className="relative flex items-center  justify-center min-h-screen p-4">
                 <div className="w-full max-w-md">
                     {/* Main Card */}
                     <div className="card bg-white shadow-2xl border border-gray-100">
@@ -63,7 +63,7 @@ const Login = () => {
                                             {...formik.getFieldProps("email")}
                                             type="email"
                                             placeholder="Enter your email"
-                                            className="input input-bordered w-full pl-12 focus:input-primary"
+                                            className="input input-bordered w-full  pl-12 focus:input-primary"
                                             required
                                         />
                                         <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -82,7 +82,7 @@ const Login = () => {
                                             {...formik.getFieldProps("password")}
                                             type="password"
                                             placeholder="Enter your password"
-                                            className="input input-bordered w-full pl-12 pr-12 focus:input-primary"
+                                            className="input input-bordered w-full pl-12 focus:input-primary"
                                             required
                                         />
                                         <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -124,19 +124,8 @@ const Login = () => {
                                     </button>
                                 </div>
                             </form>
-
-                            {/* Sign Up Link */}
-                            <div className="text-center mt-6">
-                                <p className="text-gray-600">
-                                    Don't have an account?{" "}
-                                    <a href="#" className="link link-primary font-medium">
-                                        Sign up here
-                                    </a>
-                                </p>
-                            </div>
                         </div>
                     </div>
-
                     {/* Footer */}
                     <div className="text-center mt-8 text-gray-500 text-sm">
                         <p>© 2024 Your Company. All rights reserved.</p>
