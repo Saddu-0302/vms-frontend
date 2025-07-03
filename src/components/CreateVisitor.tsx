@@ -3,6 +3,7 @@ import { useFormik } from "formik"
 import * as yup from 'yup'
 import { useAddVisitorMutation } from "../redux/visitorApi"
 import { useEffect } from "react"
+import { toast } from "react-toastify"
 
 // interface VisitorFormData {
 //     name: string
@@ -39,7 +40,7 @@ const CreateVisitor = () => {
     })
     useEffect(() => {
         if (isSuccess) {
-            alert("Visitor Created Successfull")
+            toast.success("Visitor Created Successfull")
         }
     }, [isSuccess])
     return <>
