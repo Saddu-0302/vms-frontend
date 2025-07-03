@@ -1,4 +1,4 @@
-import { FilterIcon, UserCheck, UserX } from "lucide-react"
+import { Download, FilterIcon, UserCheck, UserX } from "lucide-react"
 import { useGetAllVisitorsQuery } from "../redux/visitorApi"
 import MenuList from "./MenuList"
 import { useEffect, useState } from "react"
@@ -49,6 +49,12 @@ const AllVisitor = () => {
                 return "bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium"
         }
     }
+    const openModal = () => {
+        const modal = document.getElementById("my_modal_3") as HTMLDialogElement || null;
+        if (modal) {
+            modal.showModal()
+        }
+    }
     return <>
         <div className="min-h-screen">
             {/* header */}
@@ -75,7 +81,7 @@ const AllVisitor = () => {
                                         <li><a onClick={() => setFilterStatus("Pending")}>Pending</a></li>
                                         <li><a onClick={() => setFilterStatus("Approved")}>Approved</a></li>
                                         <li><a onClick={() => setFilterStatus("Rejected")}>Rejected</a></li>
-                                        <li><input value={search || ""} onChange={(e) => setSearch(e.target.value)} className="input" placeholder="Search" type="text" /></li>
+                                        <li><input value={search || ""} onChange={(e) => setSearch(e.target.value)} className="input lg:hidden" placeholder="Search" type="text" /></li>
                                     </ul>
                                 </div>
                             </div>
@@ -84,8 +90,18 @@ const AllVisitor = () => {
                 </div>
             </div>
 
+            <div className="flex items-center justify-between mt-5">
+                <div className="text-start text-3xl font-semibold text-gray-400 ">
+                    <h1>Visitors</h1>
+                </div>
+                <div>
+                    <button onClick={openModal} className="btn">
+                        <Download />
+                    </button>
+                </div>
+            </div>
             {
-                filteredData && <div className="hidden lg:block md:block overflow-x-auto">
+                filteredData && <div className="hidden lg:block md:block overflow-x-auto mt-5">
                     <table className="w-full table">
                         <thead className="bg-gray-50 table-header-group">
                             <tr>
@@ -96,6 +112,7 @@ const AllVisitor = () => {
                                 <th className="px-6 text-xs font-medium text-gray-500 uppercase tracking-wider">Host</th>
                                 <th className="px-6 text-xs font-medium text-gray-500 uppercase tracking-wider">Purpose</th>
                                 <th className="px-6 text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th className="px-6 text-xs font-medium text-gray-500 uppercase tracking-wider">CheckIn</th>
                                 <th className="px-6 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
@@ -111,17 +128,18 @@ const AllVisitor = () => {
                                     <td className={statusBadge(visitor.status)}>
                                         {visitor.status}
                                     </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{new Date(visitor.createdAt).toLocaleTimeString()}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500">
                                         {
                                             visitor.status == "Pending"
                                                 ? <div className="flex gap-2">
 
-                                                    <button className="btn btn-soft btn-success">
+                                                    <button className="btn btn-soft btn-success btn-sm">
                                                         <UserCheck className="w-4 h-4" />
                                                         Approve
                                                     </button>
 
-                                                    <button className="btn btn-soft btn-error">
+                                                    <button className="btn btn-soft btn-error btn-sm">
                                                         <UserX className="w-4 h-4" />
                                                         Reject
                                                     </button>
@@ -183,7 +201,28 @@ const AllVisitor = () => {
                     </ul>
                 </div>
             </div>
-        </div>
+
+
+            {/* download modal */}
+            <dialog id="my_modal_3" className="modal">
+                <div className="modal-box w-72">
+                    <form method="dialog">
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+
+                        <div className="mt-5">
+                            <div className="">
+                                <input type="date" className="border-2 p-2 border-gray-500" />
+                            </div>
+                            <div className="mt-5 ">
+                                <button className="btn btn-soft btn-primary rounded-l-full"> Word pdf</button>
+                                <button className="btn btn-soft btn-success rounded-r-full"> Excel pdf</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </dialog>
+        </div >
 
     </>
 }
