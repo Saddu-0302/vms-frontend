@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { Users, Search, TrendingUp, Eye, Phone, Shield, UserCheck, ShieldCheck, PersonStandingIcon, UserPlus } from "lucide-react"
+import { Users, Search, TrendingUp, Eye, Phone, Shield, UserCheck, ShieldCheck, UserPlus } from "lucide-react"
 import MenuList from "./MenuList"
 import { useGetAllVisitorsQuery } from "../redux/visitorApi"
 import CreateVisitor from "./CreateVisitor"
@@ -113,7 +113,12 @@ const VisitorDashboard = () => {
                 return "bg-gray-100 text-gray-800 hover:bg-gray-200"
         }
     }
-
+    const openModal = () => {
+        const modal = document.getElementById('my_modal_2') as HTMLDialogElement | null;
+        if (modal) {
+            modal.showModal();
+        }
+    };
     const maxVisitors = Math.max(...chartData.map((d) => d.visitors))
     return (
         <div className="min-h-screen bg-gray-50/50">
@@ -134,9 +139,7 @@ const VisitorDashboard = () => {
                             <div className="flex justify-end  ">
                                 <button
                                     className=" btn bg-gradient-to-r from-blue-600 to-purple-600 text-white "
-                                    onClick={() => {
-                                        (document.getElementById('my_modal_3') as HTMLInputElement).showModal()
-                                    }}
+                                    onClick={openModal}
                                 >
                                     <UserPlus className="w-4 h-4" /> Add Visitor
                                 </button>
@@ -407,7 +410,7 @@ const VisitorDashboard = () => {
             </div>
 
             {/* add visitor modal */}
-            <dialog id="my_modal_3" className="modal">
+            <dialog id="my_modal_2" className="modal">
                 <div className="modal-box">
                     <form method="dialog">
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
