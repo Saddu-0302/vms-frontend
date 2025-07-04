@@ -272,6 +272,7 @@ const UserManagement = () => {
                         )}
                     </div>
 
+
                     {/* Enhanced Mobile Cards */}
                     <div className="md:hidden divide-y divide-gray-200">
                         {filterUsers &&
