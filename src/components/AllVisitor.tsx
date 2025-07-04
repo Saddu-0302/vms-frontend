@@ -2,6 +2,10 @@ import { Download, FilterIcon, UserCheck, UserX } from "lucide-react"
 import { useGetAllVisitorsQuery } from "../redux/visitorApi"
 import MenuList from "./MenuList"
 import { useEffect, useState } from "react"
+import jsPDF from 'jspdf'
+import autoTable from "jspdf-autotable"
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
 interface Visitor {
     _id: string
     name: string
@@ -20,6 +24,7 @@ const AllVisitor = () => {
 
     const [search, setSearch] = useState<string>()
     const [filterStatus, setFilterStatus] = useState<string>()
+    const [selectDate, setSelectDate] = useState<string>('')
     const [filteredData, setFilteredData] = useState<Visitor[]>()
     const { data } = useGetAllVisitorsQuery(undefined)
     console.log(filteredData);
@@ -55,6 +60,42 @@ const AllVisitor = () => {
             modal.showModal()
         }
     }
+    const filterData = data?.filter((v: any) => {
+        if (!v.checkIn) return false;
+        const checkInDateObj = new Date(v.checkIn);
+        const checkInDate = checkInDateObj.toISOString().split('T')[0];
+        return selectDate ? checkInDate === selectDate : true;
+    })
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+        doc.text(`Visitor Report (${selectDate || ''})`, 14, 10);
+        autoTable(doc, {
+            head: [['Name', "Email", "Contact", "Status", "Host", "Purpose"]],
+            body: filterData.map((v: any) => [
+                v.name,
+                v.email,
+                v.contact,
+                v.status,
+                v.host,
+                v.purpose,
+            ]),
+        });
+        doc.save(`visitors.pdf  ${selectDate || ''}.pdf`)
+    }
+    const exportToExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(filterData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Visitors")
+
+        const excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array"
+        });
+        const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+        saveAs(dataBlob, `visitors ${selectDate || ''}.xlsx`);
+    }
+
+
     return <>
         <div className="min-h-screen">
             {/* header */}
@@ -211,11 +252,14 @@ const AllVisitor = () => {
 
                         <div className="mt-5">
                             <div className="">
-                                <input type="date" className="border-2 p-2 border-gray-500" />
+                                <label className="text-lg font-semibold text-gray-500">Select Date</label>
+                                <input
+                                    value={selectDate || ""}
+                                    onChange={(e) => setSelectDate(e.target.value)} type="date" className="input  border-gray-500" />
                             </div>
                             <div className="mt-5 ">
-                                <button className="btn btn-soft btn-primary rounded-l-full"> Word pdf</button>
-                                <button className="btn btn-soft btn-success rounded-r-full"> Excel pdf</button>
+                                <button onClick={exportToPDF} className="btn btn-soft btn-primary rounded-l-full"> Word pdf</button>
+                                <button onClick={exportToExcel} className="btn btn-soft btn-success rounded-r-full"> Excel pdf</button>
                             </div>
                         </div>
                     </form>
