@@ -34,25 +34,18 @@ const Login = () => {
         }
     }, [isSuccess, isError])
     return <>
-        <div className="min-h-screen ">
+        <div className="min-h-screen -mx-5">
             {/* Background Pattern */}
-            <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-
-            <div className="relative flex items-center  justify-center min-h-screen p-4">
+            <div className="relative flex items-center justify-center">
                 <div className="w-full max-w-md">
                     {/* Main Card */}
                     <div className="card bg-white shadow-2xl border border-gray-100">
-                        <div className="card-body p-8">
+                        <div className="">
                             {/* Header */}
                             <div className="text-start mb-8">
                                 <h1 className="text-2xl font-bold">Sign In</h1>
                                 <p className="text-gray-600">Sign in to your account to continue</p>
                             </div>
-
-
-
-
-
                             {/* Login Form */}
                             <form onSubmit={formik.handleSubmit} className="space-y-6">
                                 {/* Email Field */}
@@ -63,10 +56,10 @@ const Login = () => {
                                             {...formik.getFieldProps("email")}
                                             type="email"
                                             placeholder="Enter your email"
-                                            className="input input-bordered w-full  pl-12 focus:input-primary"
+                                            className="input input-bordered w-full focus:input-primary pl-8"
                                             required
                                         />
-                                        <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                        <Mail className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                                     </div>
                                     {
                                         formik.touched.email && formik.errors.email &&
@@ -82,10 +75,10 @@ const Login = () => {
                                             {...formik.getFieldProps("password")}
                                             type="password"
                                             placeholder="Enter your password"
-                                            className="input input-bordered w-full pl-12 focus:input-primary"
+                                            className="input input-bordered w-full pl-8 focus:input-primary"
                                             required
                                         />
-                                        <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                        <Lock className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                                     </div>
                                     {
                                         formik.touched.password && formik.errors.password &&
@@ -98,7 +91,7 @@ const Login = () => {
                                 <div className="flex items-center justify-between">
                                     <label className="label cursor-pointer">
                                         <input type="checkbox" className="checkbox checkbox-primary checkbox-sm" />
-                                        <span className="label-text ml-2">Remember me</span>
+                                        <span className="label-text ">Remember me</span>
                                     </label>
                                     <a href="#" className="link link-primary text-sm">
                                         Forgot password?
