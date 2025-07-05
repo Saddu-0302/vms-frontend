@@ -99,27 +99,28 @@ const UserManagement = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50/50 ">
+        <div className="min-h-screen bg-gray-50/50 mx-2 mt-2">
             {/* Enhanced Header */}
-            <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center py-6">
-                        <div className="flex items-center gap-3">
-                            <div className="">
-                                <label htmlFor="my-drawer" className="cursor-pointer drawer-button rounded-full "><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
-                                    <path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-                                </svg></label>
-                            </div>
-                            <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
+            <div className="navbar bg-base-100 shadow-sm">
+                <div className="navbar-start">
+                    <div className="flex items-center">
+                        <div className="">
+                            <label htmlFor="my-drawer" className="cursor-pointer drawer-button rounded-full "><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
+                                <path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                            </svg></label>
                         </div>
-                        <button onClick={openModal} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:bg-blue-700 text-white btn lg:btn-md md:btn-sm cursor-pointer">
-                            <UserPlus className="w-4 h-4" />
-                            Add User
-                        </button>
+                        <h1 className="lg:text-2xl md:text-sm font-bold text-gray-900 ">User Management</h1>
                     </div>
                 </div>
+                {/* <div className="navbar-center">
+                </div> */}
+                <div className="navbar-end">
+                    <button onClick={openModal} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:bg-blue-700 text-white btn lg:btn-md md:btn-sm cursor-pointer">
+                        <UserPlus className="w-4 h-4" />
+                        User
+                    </button>
+                </div>
             </div>
-
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {userData &&
@@ -152,7 +153,7 @@ const UserManagement = () => {
                     <div className="px-6 py-4 border-b border-gray-200">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             <h2 className="text-lg font-semibold text-gray-900">All Users</h2>
-                            <div className="flex flex-col sm:flex-row gap-3">
+                            <div className="flex flex-row sm:flex-row gap-3">
                                 {/* Enhanced Search Input */}
                                 <div className="relative">
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -174,7 +175,7 @@ const UserManagement = () => {
                                             className="btn btn-outline border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 text-gray-700 normal-case font-normal"
                                         >
                                             <Filter className="w-4 h-4 mr-2" />
-                                            {filterRole ? filterRole.charAt(0).toUpperCase() + filterRole.slice(1) : "All Roles"}
+                                            {filterRole ? filterRole.charAt(0).toUpperCase() + filterRole.slice(1) : "All "}
                                         </div>
                                         <ul
                                             tabIndex={0}
