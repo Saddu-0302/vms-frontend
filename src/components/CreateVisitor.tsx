@@ -51,17 +51,13 @@ const CreateVisitor = () => {
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4 shadow-lg">
                         <Building2 className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Visitor Registration</h1>
-                    <p className="text-gray-600 mb-4">Please fill out the form below to register your visit</p>
+                    <h1 className="text-xl font-bold text-gray-900 ">Visitor Registration</h1>
+
                 </div>
 
                 {/* Main Form Card */}
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
                     {/* Card Header */}
-                    <div className="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50">
-                        <h2 className="text-xl font-semibold text-gray-800">Visitor Information</h2>
-                        <p className="text-gray-600 text-sm mt-1">All fields are required for security and tracking purposes</p>
-                    </div>
 
                     {/* Card Content */}
                     <div className="px-8 py-8">
@@ -200,7 +196,7 @@ const CreateVisitor = () => {
                             <div className="pt-6 border-t border-gray-100">
                                 <button
                                     type="submit"
-                                    className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium text-base rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                                    className="w-full btn bg-gradient-to-r from-blue-500 to-purple-500 text-white"
                                 >
                                     {isLoading ? (
                                         <>
@@ -214,18 +210,9 @@ const CreateVisitor = () => {
                                         </>
                                     )}
                                 </button>
-
-                                <p className="text-xs text-gray-500 text-center mt-4">
-                                    By submitting this form, you agree to our visitor policies and security protocols.
-                                </p>
                             </div>
                         </form>
                     </div>
-                </div>
-
-                {/* Footer */}
-                <div className="text-center mt-6 text-sm text-gray-500">
-                    <p>Need assistance? Contact security at ext. 1234</p>
                 </div>
             </div>
         </div>
