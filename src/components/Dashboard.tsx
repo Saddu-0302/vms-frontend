@@ -1,10 +1,11 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { Users, Search, TrendingUp, Eye, Phone, Shield, UserCheck, ShieldCheck, UserPlus } from "lucide-react"
+import { Users, Search, Eye, Phone, Shield, UserCheck, ShieldCheck, UserPlus } from "lucide-react"
 import MenuList from "./MenuList"
 import { useGetAllVisitorsQuery } from "../redux/visitorApi"
 import CreateVisitor from "./CreateVisitor"
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 
 interface Visitor {
@@ -25,15 +26,7 @@ interface Visitor {
 
 
 // Mock chart data
-const chartData = [
-    { day: "Mon", visitors: 12, approved: 10, rejected: 2 },
-    { day: "Tue", visitors: 19, approved: 15, rejected: 4 },
-    { day: "Wed", visitors: 15, approved: 12, rejected: 3 },
-    { day: "Thu", visitors: 22, approved: 18, rejected: 4 },
-    { day: "Fri", visitors: 28, approved: 24, rejected: 4 },
-    { day: "Sat", visitors: 8, approved: 7, rejected: 1 },
-    { day: "Sun", visitors: 5, approved: 4, rejected: 1 },
-]
+
 
 const VisitorDashboard = () => {
     const { data } = useGetAllVisitorsQuery(undefined)
@@ -83,7 +76,7 @@ const VisitorDashboard = () => {
 
         },
     ]
-    const today = new Date().toISOString().split("T")[0]
+    const today = useMemo(() => new Date().toISOString().split("T")[0], []);
     const todaysVisitor = useMemo(() => {
         return visitor?.filter((visitor: any) => {
             const visitorDate = new Date(visitor.createdAt).toISOString().split("T")[0];
@@ -92,15 +85,19 @@ const VisitorDashboard = () => {
     }, [visitor])
 
     useEffect(() => {
-        const inputSearch = search?.toLowerCase().trim()
-        if (inputSearch) {
-            const filtered = todaysVisitor.filter((v: Visitor) =>
-                v.name.toLowerCase().includes(inputSearch));
-            setFilteredVisitors(filtered)
-        } else {
-            setFilteredVisitors(todaysVisitor)
-        }
-    }, [search, todaysVisitor])
+        const inputSearch = search?.toLowerCase().trim();
+
+        const newList = inputSearch
+            ? todaysVisitor.filter((v: Visitor) =>
+                v.name.toLowerCase().includes(inputSearch)
+            )
+            : todaysVisitor;
+
+        setFilteredVisitors((prev) =>
+            JSON.stringify(prev) !== JSON.stringify(newList) ? newList : prev
+        );
+    }, [search, todaysVisitor]);
+
     const getStatusBadge = (status: string) => {
         switch (status) {
             case "Approved":
@@ -119,36 +116,52 @@ const VisitorDashboard = () => {
             modal.showModal();
         }
     };
-    const maxVisitors = Math.max(...chartData.map((d) => d.visitors))
+
+
+
+    // Filter only today's visitors
+    const todaysVisitors = useMemo(() => {
+        return (data || []).filter((v: any) => {
+            const createdAt = new Date(v.createdAt).toISOString().split('T')[0];
+            return createdAt === today;
+        });
+    }, [data, today]);
+
+    const chartData = useMemo(() => {
+        const pending = todaysVisitors.filter((v: any) => v.status === 'Pending').length;
+        const approved = todaysVisitors.filter((v: any) => v.status === 'Approved').length;
+        const rejected = todaysVisitors.filter((v: any) => v.status === 'Rejected').length;
+
+        return [
+            { status: 'Pending', count: pending },
+            { status: 'Approved', count: approved },
+            { status: 'Rejected', count: rejected }
+        ];
+    }, [todaysVisitors]);
+
     return (
         <div className="min-h-screen bg-gray-50/50">
             {/* Header */}
-            <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center py-6">
-                        <div className="flex items-center gap-3">
-                            <div className="text-sm text-gray-600">
-                                <label htmlFor="my-drawer" className="cursor-pointer drawer-button rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
-                                    <path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-                                </svg></label>
-                            </div>
-                            <h1 className="text-2xl font-bold text-gray-900">Visitor Dashboard</h1>
+            <div className="navbar bg-base-100 shadow-sm">
+                <div className="navbar-start">
+                    <div className="flex items-center">
+                        <div className="">
+                            <label htmlFor="my-drawer" className="cursor-pointer drawer-button rounded-full "><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
+                                <path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                            </svg></label>
                         </div>
-                        <div className="flex items-center gap-3">
-
-                            <div className="flex justify-end  ">
-                                <button
-                                    className=" btn bg-gradient-to-r from-blue-600 to-purple-600 text-white "
-                                    onClick={openModal}
-                                >
-                                    <UserPlus className="w-4 h-4" /> Add Visitor
-                                </button>
-                            </div>
-                        </div>
+                        <h1 className="lg:text-2xl text-md  font-bold text-gray-900">Visitor Dashboard</h1>
                     </div>
                 </div>
+                <div className="navbar-end">
+                    <button
+                        className=" btn bg-gradient-to-r from-blue-600 to-purple-600 text-white "
+                        onClick={openModal}
+                    >
+                        <UserPlus className="w-4 h-4" /> Visitor
+                    </button>
+                </div>
             </div>
-
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Statistics Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -178,60 +191,21 @@ const VisitorDashboard = () => {
                 </div>
 
                 {/* Chart Section */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
-                    <div className="px-6 py-4 border-b border-gray-200">
-                        <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                            <TrendingUp className="w-5 h-5" />
-                            Weekly Visitor Trends
-                        </h2>
-                    </div>
-                    <div className="p-6">
-                        <div className="h-64 flex items-end justify-between gap-4 px-4">
-                            {chartData.map((data, index) => (
-                                <div key={index} className="flex flex-col items-center flex-1">
-                                    <div className="w-full flex justify-center gap-1 mb-2">
-                                        {/* Approved bar */}
-                                        <div className="flex flex-col items-center flex-1">
-                                            <div
-                                                className="w-full bg-green-500 rounded-t-sm transition-all duration-300 hover:bg-green-600 cursor-pointer"
-                                                style={{
-                                                    height: `${(data.approved / maxVisitors) * 200}px`,
-                                                    minHeight: data.approved > 0 ? "8px" : "0px",
-                                                }}
-                                                title={`Approved: ${data.approved}`}
-                                            />
-                                            <div className="text-xs text-green-600 font-medium mt-1">{data.approved}</div>
-                                        </div>
-                                        {/* Rejected bar */}
-                                        <div className="flex flex-col items-center flex-1">
-                                            <div
-                                                className="w-full bg-red-500 rounded-t-sm transition-all duration-300 hover:bg-red-600 cursor-pointer"
-                                                style={{
-                                                    height: `${(data.rejected / maxVisitors) * 200}px`,
-                                                    minHeight: data.rejected > 0 ? "8px" : "0px",
-                                                }}
-                                                title={`Rejected: ${data.rejected}`}
-                                            />
-                                            <div className="text-xs text-red-600 font-medium mt-1">{data.rejected}</div>
-                                        </div>
-                                    </div>
-                                    <div className="text-xs font-medium text-gray-600 mt-2">{data.day}</div>
-                                    <div className="text-xs text-gray-500">Total: {data.visitors}</div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="flex justify-center gap-6 mt-4 pt-4 border-t">
-                            <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 bg-green-500 rounded"></div>
-                                <span className="text-sm text-gray-600">Approved</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 bg-red-500 rounded"></div>
-                                <span className="text-sm text-gray-600">Rejected</span>
-                            </div>
-                        </div>
-                    </div>
+                <div className="w-full h-[300px] my-8 p-4 bg-white rounded shadow">
+                    <h2 className="text-xl font-semibold text-gray-700 mb-4">Today's Visitor Status</h2>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="status" />
+                            <YAxis allowDecimals={false} />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="count" fill="#4f46e5" />
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
+
+
 
                 {/* Today's Visitors Section */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200">
