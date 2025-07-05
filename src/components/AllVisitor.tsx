@@ -60,22 +60,15 @@ const AllVisitor = () => {
             modal.showModal()
         }
     }
-    const filterData = data?.filter((v: any) => {
-        if (!v.checkIn) return false;
-        const checkInDateObj = new Date(v.checkIn);
-        const checkInDate = checkInDateObj.toISOString().split('T')[0];
-        return selectDate ? checkInDate === selectDate : true;
-    })
     const exportToPDF = () => {
         const doc = new jsPDF();
         const fileLabel = selectDate || 'all';
 
         const dataToExport = (selectDate
             ? data?.filter((v: any) => {
-                if (!v.checkIn) return false;
-                const checkInDateObj = new Date(v.checkIn);
-                const checkInDate = checkInDateObj.toISOString().split('T')[0];
-                return checkInDate === selectDate;
+                if (!v.createdAt) return false;
+                const createdDate = new Date(v.createdAt).toISOString().split('T')[0];
+                return createdDate === selectDate;
             })
             : filteredData) || [];
 
@@ -88,7 +81,7 @@ const AllVisitor = () => {
 
         autoTable(doc, {
             startY: 20,
-            head: [['Name', "Email", "Contact", "Status", "Host", "Purpose", "CheckIn"]],
+            head: [['Name', "Email", "Contact", "Status", "Host", "Purpose", "Created At"]],
             body: dataToExport.map((v: any) => [
                 v.name,
                 v.email,
@@ -102,6 +95,7 @@ const AllVisitor = () => {
 
         doc.save(`visitors_${fileLabel}.pdf`);
     };
+
 
     const exportToExcel = () => {
         const fileLabel = selectDate || 'all';
