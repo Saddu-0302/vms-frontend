@@ -68,70 +68,115 @@ const AllVisitor = () => {
     })
     const exportToPDF = () => {
         const doc = new jsPDF();
-        doc.text(`Visitor Report (${selectDate || ''})`, 14, 10);
+        const fileLabel = selectDate || 'all';
+
+        const dataToExport = (selectDate
+            ? data?.filter((v: any) => {
+                if (!v.checkIn) return false;
+                const checkInDateObj = new Date(v.checkIn);
+                const checkInDate = checkInDateObj.toISOString().split('T')[0];
+                return checkInDate === selectDate;
+            })
+            : filteredData) || [];
+
+        if (dataToExport.length === 0) {
+            alert("No visitor data available to export.");
+            return;
+        }
+
+        doc.text(`Visitor Report (${fileLabel})`, 14, 10);
+
         autoTable(doc, {
-            head: [['Name', "Email", "Contact", "Status", "Host", "Purpose"]],
-            body: filterData.map((v: any) => [
+            startY: 20,
+            head: [['Name', "Email", "Contact", "Status", "Host", "Purpose", "CheckIn"]],
+            body: dataToExport.map((v: any) => [
                 v.name,
                 v.email,
                 v.contact,
                 v.status,
                 v.host,
                 v.purpose,
-            ]),
+                new Date(v.createdAt).toLocaleString()
+            ])
         });
-        doc.save(`visitors.pdf  ${selectDate || ''}.pdf`)
-    }
+
+        doc.save(`visitors_${fileLabel}.pdf`);
+    };
+
     const exportToExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(filterData);
+        const fileLabel = selectDate || 'all';
+
+        const dataToExport = (selectDate
+            ? data?.filter((v: any) => {
+                if (!v.createdAt) return false;
+                const createdDate = new Date(v.createdAt).toISOString().split('T')[0];
+                return createdDate === selectDate;
+            })
+            : filteredData) || [];
+
+        if (dataToExport.length === 0) {
+            alert("No visitor data available to export.");
+            return;
+        }
+
+        const formattedData = dataToExport.map((v: any) => ({
+            Name: v.name,
+            Email: v.email,
+            Contact: v.contact,
+            Status: v.status,
+            Host: v.host,
+            Purpose: v.purpose,
+            'Created At': new Date(v.createdAt).toLocaleString() // ✅ use createdAt
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(formattedData);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Visitors")
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Visitors");
 
         const excelBuffer = XLSX.write(workbook, {
             bookType: "xlsx",
             type: "array"
         });
         const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-        saveAs(dataBlob, `visitors ${selectDate || ''}.xlsx`);
-    }
+        saveAs(dataBlob, `visitors_${fileLabel}.xlsx`);
+    };
+
 
 
     return <>
-        <div className="min-h-screen">
+        <div className="min-h-screen mx-2">
             {/* header */}
-            <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center py-6">
-                        <div className="flex items-center gap-3">
-                            <div className="text-sm text-gray-600">
-                                <label htmlFor="my-drawer" className="cursor-pointer drawer-button rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
-                                    <path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-                                </svg></label>
-                            </div>
-                            <h1 className="text-2xl font-bold text-gray-900">Visitor Dashboard</h1>
+            <div className="navbar bg-base-100 shadow-sm ">
+                <div className="navbar-start">
+                    <div className="flex items-center gap-3">
+                        <div className="text-sm text-gray-600">
+                            <label htmlFor="my-drawer" className="cursor-pointer drawer-button rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
+                                <path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                            </svg></label>
                         </div>
-                        <div className="flex items-center gap-3">
-                            <div className="flex justify-end  ">
-                                <input value={search || ""} onChange={(e) => setSearch(e.target.value)} className="input hidden lg:block" placeholder="Search" type="text" />
-                                <div className="dropdown dropdown-end">
-                                    <div tabIndex={0} role="button" className="btn border-2 border-gray-300 ">
-                                        <FilterIcon className="w-4 h-4" />
-                                    </div>
-                                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                        <li><a onClick={() => setFilterStatus("")}>All Visitor</a></li>
-                                        <li><a onClick={() => setFilterStatus("Pending")}>Pending</a></li>
-                                        <li><a onClick={() => setFilterStatus("Approved")}>Approved</a></li>
-                                        <li><a onClick={() => setFilterStatus("Rejected")}>Rejected</a></li>
-                                        <li><input value={search || ""} onChange={(e) => setSearch(e.target.value)} className="input lg:hidden" placeholder="Search" type="text" /></li>
-                                    </ul>
-                                </div>
+                        <h1 className="lg:text-2xl md:text-2xl font-bold text-gray-900">Visitor Dashboard</h1>
+                    </div>
+                </div>
+                <div className="navbar-end">
+                    <div className="flex">
+                        <input value={search || ""} onChange={(e) => setSearch(e.target.value)} className="input hidden lg:block" placeholder="Search" type="text" />
+                        <div className="dropdown dropdown-end">
+                            <div tabIndex={0} role="button" className="btn border-2 border-gray-300 ">
+                                <FilterIcon className="w-4 h-4" />
                             </div>
+                            <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                <li><a onClick={() => setFilterStatus("")}>All Visitor</a></li>
+                                <li><a onClick={() => setFilterStatus("Pending")}>Pending</a></li>
+                                <li><a onClick={() => setFilterStatus("Approved")}>Approved</a></li>
+                                <li><a onClick={() => setFilterStatus("Rejected")}>Rejected</a></li>
+                                <li><input value={search || ""} onChange={(e) => setSearch(e.target.value)} className="input lg:hidden" placeholder="Search" type="text" /></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex items-center justify-between mt-5">
+            <div className="flex items-center justify-between mt-5 mx-4">
                 <div className="text-start text-3xl font-semibold text-gray-400 ">
                     <h1>Visitors</h1>
                 </div>
