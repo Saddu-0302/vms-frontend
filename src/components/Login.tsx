@@ -34,12 +34,12 @@ const Login = () => {
         }
     }, [isSuccess, isError])
     return <>
-        <div className="min-h-screen -mx-5">
+        <div className="min-h-screen m-2">
             {/* Background Pattern */}
-            <div className="relative flex items-center justify-center">
+            <div className="flex items-center justify-center">
                 <div className="w-full max-w-md">
                     {/* Main Card */}
-                    <div className="card bg-white shadow-2xl border border-gray-100">
+                    <div className="card p-5 bg-white shadow-2xl border border-gray-100">
                         <div className="">
                             {/* Header */}
                             <div className="text-start mb-8">
